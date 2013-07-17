@@ -1,7 +1,7 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy import Column, Integer, String, Date 
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship, backref
 
 
 ENGINE = None
@@ -54,10 +54,16 @@ class Rating(Base):
     __tablename__ = "ratings"
 
     id = Column(Integer, primary_key = True)
-    movie_id = Column(Integer)
-    user_id = Column(Integer)
+    movie_id = Column(Integer, ForeignKey('movies.id'))
+    user_id = Column(Integer, ForeignKey('users.id'))
     rating = Column(Integer)
 
+    owner = relationship("User", backref = backref("ratings", order_by = id))
+
+    movie = relationship("Movie", backref = backref("movie_rating", order_by = id))
+
+def make(engine):
+    Base.metadata.create_all(engine)
 
     #   We don't need Init in our classes 
 
@@ -73,13 +79,15 @@ def connect():
 
     ENGINE = create_engine("sqlite:///ratings.db", echo=True)
     Session = sessionmaker(bind=ENGINE)
-
     return Session()
 
 def main():
-    pass
+    global ENGINE
+    connect()
+
+    #Commented out make function call so that running model doesn't recreate the tables
+
+    # make(ENGINE)
 
 if __name__ == "__main__":
     main()
-
-
