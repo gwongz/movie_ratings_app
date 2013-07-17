@@ -1,13 +1,16 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy import Column, Integer, String, Date 
-from sqlalchemy.orm import sessionmaker, relationship, backref
+from sqlalchemy.orm import sessionmaker, relationship, backref, scoped_session
 
 
-ENGINE = None
-Session = None
+engine = create_engine("sqlite:///ratings.db", echo=False)
+session = scoped_session(sessionmaker(bind=engine,
+                                    autocommit = False,
+                                    autoflush = False))
 
 Base = declarative_base()
+Base.query = session.query_property()
 
 ### Class declarations go here
 
@@ -62,28 +65,32 @@ class Rating(Base):
 
     movie = relationship("Movie", backref = backref("movie_rating", order_by = id))
 
-def make(engine):
-    Base.metadata.create_all(engine)
-
     #   We don't need Init in our classes 
-
     # def __init__(self, movie_id, user_id, rating):
     #     self.movie_id = movie_id
     #     self.user_id = user_id
     #     self.rating = rating
 
-### End class declarations
-def connect():
-    global ENGINE
-    global Session
 
-    ENGINE = create_engine("sqlite:///ratings.db", echo=True)
-    Session = sessionmaker(bind=ENGINE)
-    return Session()
+# def make(engine):
+#     Base.metadata.create_all(engine)
+
+### End class declarations
+
+
+#Connect() was removed after threads were introduced. Why?
+# def connect():
+#     global ENGINE
+#     global Session
+
+#     ENGINE = create_engine("sqlite:///ratings.db", echo=True)
+#     Session = sessionmaker(bind=ENGINE)
+#     return Session()
 
 def main():
-    global ENGINE
-    connect()
+    pass
+    # global ENGINE
+    # connect()
 
     #Commented out make function call so that running model doesn't recreate the tables
 

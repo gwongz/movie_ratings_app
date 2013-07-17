@@ -1,0 +1,19 @@
+<html>
+    <body>
+    <!-- This is how you feed in the user_id to get the user info page !! -->
+    <h1>Movie and rating information for <a href="/signin?ID={{user_id}}">User {{user_id}}</a></h1>
+    <h3>
+        {% for rating in ratings_list %}
+        
+        Movie: {{rating.movie.name}}
+        Rating: {{rating.rating}}
+        <br>
+        <p></p>
+        {% endfor %}
+        
+    </h3>
+
+
+
+    </body>
+</html>

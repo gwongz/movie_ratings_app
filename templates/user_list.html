@@ -1,0 +1,17 @@
+<html>
+    <body>
+    
+    <h1>All users </h1>
+    <h2>
+
+        {% for user in user_list %}
+        
+        User {{user.id}}, age {{user.age}} has {{user.ratings|length }} ratings</a>
+        <br>
+
+        {% endfor %}
+    
+    </h2>
+
+    </body>
+</html>
