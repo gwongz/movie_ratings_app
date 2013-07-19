@@ -97,21 +97,18 @@ def change_user_rating():
 
 @app.route("/process_rate_change")
 def process_rate_change():
-    movie_id = int(request.args.get("x"))
+    movie_id = int(request.args.get("movie_id"))
     rating = model.session.query(model.Rating).filter(model.Rating.movie_id == movie_id).filter(model.Rating.user_id ==g.user.id).first()
     new_rating = request.args.get("new_rating")
     rating.rating = new_rating
     model.session.commit()
-    return redirect("user_ratings", user=g.user)
+    
+    return render_template("user_info.html", user=g.user,
+                                                rating =rating)
 
 
 
 
-# @app.route("/all_movies")
-# def all_movies():
-#     # movies = model.session.query(model.Movie).all()
-#     ratings = session.query(model.Ratings).all()
-#     movies = session.query(model.Movies).all()
   
 
 
