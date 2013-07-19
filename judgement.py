@@ -10,11 +10,16 @@ app.secret_key = "abcdefghijklmnop"
 def login():
     return render_template("index.html")
 
+@app.route("/logout")
+def logout():
+    session["user_id"] = None
+    return redirect("/")
+
 @app.route("/process_login", methods=["GET", "POST"])
 def process_login():
     username = request.form.get("username")
     password = request.form.get("password")
-    user = model.session.query(model.User).filter(model.User.email==username).filter(model.User.password==password).one()
+    user = model.session.query(model.User).filter(model.User.email==username).filter(model.User.password==password).first()
 
     if not user:
         return redirect(url_for("login"))
@@ -38,6 +43,8 @@ def add_user():
 
     model.session.add(user)
     model.session.commit()
+
+    session['user_id'] = user.id
 
     return render_template("user_info.html", user=user)
 
@@ -107,6 +114,8 @@ def process_rate_change():
                                                 rating =rating)
 
 
+if __name__ == "__main__":
+    app.run(debug = True)
 
 
   
@@ -183,6 +192,3 @@ def process_rate_change():
 
 
 #     return render_template("user_ratings.html", user_id=user_id, ratings_list=user.ratings)
-
-if __name__ == "__main__":
-    app.run(debug = True)
