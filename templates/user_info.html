@@ -2,13 +2,26 @@
     <body>
     <h1>User information </h1>
     <h2>
-        User {{user.id}}, age {{user.age}} has {{user.ratings|length }} <a href="/user_ratings?user_id={{user.id}}">ratings</a>
+        Username {{user.email}}, age {{user.age}} has {{user.ratings|length }} ratings</a><br>
+
+       
+        {% for rating in user.ratings %}
+        <ul>
+        <li>Movie: <a href="/movies_by_user?id={{rating.movie.id}}">{{rating.movie.name}}</a></li>
+        <li>Rating: {{rating.rating}}</li>
+        </ul>
+        {% endfor %}
+        <br> 
 
 
         <br>
     </h2>
 
+    <a href="/add_rating">Add a rating</a>
+
 
     <a href="/all_users">All users</a>
     </body>
 </html>
+
+<!-- <a href="/user_ratings?user_id={{user.id}}">

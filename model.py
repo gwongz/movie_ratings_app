@@ -63,7 +63,7 @@ class Rating(Base):
 
     owner = relationship("User", backref = backref("ratings", order_by = id))
 
-    movie = relationship("Movie", backref = backref("movie_rating", order_by = id))
+    movie = relationship("Movie", backref = backref("ratings", order_by = id))
 
     #   We don't need Init in our classes 
     # def __init__(self, movie_id, user_id, rating):
@@ -72,8 +72,8 @@ class Rating(Base):
     #     self.rating = rating
 
 
-# def make(engine):
-#     Base.metadata.create_all(engine)
+def make(engine):
+    Base.metadata.create_all(engine)
 
 ### End class declarations
 

@@ -1,7 +1,7 @@
 <html>
     <body> 
         <p> Sign Up </p>
-        <form action = "/add_user">
+        <form action = "{{url_for ('add_user')}}" method="POST">
             <!-- <label for="email">Email</label> -->
             Email: <input type="text" name="email"/>
             <br>
