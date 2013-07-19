@@ -80,7 +80,32 @@ def new_rating():
 def get_movie_by_name_user():
     id = int(request.args.get("id"))
     movie = model.session.query(model.Movie).get(id)
-    return "works!"
+    rating = model.session.query(model.Rating).filter(model.Rating.movie_id==id).filter(model.Rating.user_id==g.user.id).one()
+
+    return render_template("movie_by_user.html", movie=movie, rating=rating)
+
+@app.route("/change_rating_form")
+def change_user_rating():
+
+    movie_id = request.args.get("movie_id")
+
+    movie = model.session.query(model.Movie).get(movie_id)
+    rating = model.session.query(model.Rating).filter(model.Rating.movie_id==movie_id).filter(model.Rating.user_id==g.user.id).one()
+    # movie = request.args.get("movie")
+    # rating = request.args.get("rating")
+    return render_template("change_rating_form.html", movie=movie, rating=rating)
+
+@app.route("/process_rate_change")
+def process_rate_change():
+    movie_id = int(request.args.get("x"))
+    rating = model.session.query(model.Rating).filter(model.Rating.movie_id == movie_id).filter(model.Rating.user_id ==g.user.id).first()
+    new_rating = request.args.get("new_rating")
+    rating.rating = new_rating
+    model.session.commit()
+    return redirect("user_ratings", user=g.user)
+
+
+
 
 # @app.route("/all_movies")
 # def all_movies():

@@ -1,0 +1,14 @@
+<html>
+    <head>
+        <title>Change Rating for {{movie.name}} </title>
+    </head>
+    <body>
+        <form action="/process_rate_change">
+        <input type="hidden" name="x" value="{{movie.id}}">
+        Movie: {{movie.name}}<br>
+        Current Rating: {{rating.rating}}<br>
+        New Rating: <input type="number" name="new_rating"/><br>
+        <input type="submit" value="Change Rating"/>
+        </form>
+    </body>
+</html>
