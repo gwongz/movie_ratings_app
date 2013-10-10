@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+ {% block nav %}
+
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="{{url_for('show_search')}}">Search</a></li>
+
+
+          {%endblock%}
+
+ {% block body %}
+ <a href="{{url_for('logout')}}">Logout</a><br>
+
+
+
+    <h2>
+        Hello, {{user.email}}! You have {{user.ratings|length }} ratings:</a><br>
+    </h2>
+       
+        {% for rating in user.ratings %}
+        <ul>
+        <li>Movie: 
+        <a href="/movie?id={{rating.movie_id}}"> {{rating.movie.name}}</a></li>
+        <li>Rating: {{rating.rating}}</li>
+        </ul>
+    {% else %}
+    <h3>You haven't submitted any ratings yet. Have you seen any of these 
+    <a href="{{url_for('all_movies')}}">movies?</a></h3>
+
+      {% endfor %}
+  
+ 
+
+{% endblock %}
+
+
+

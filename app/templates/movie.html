@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+      {% block nav %}
+        {% if g.user %}
+                <li><a href="{{url_for('user')}}">My Ratings</a></li>
+                 <li><a href="{{url_for('show_search')}}">Search</a></li>
+                 <li><a href="{{url_for('logout')}}">Logout</a></li>
+
+        {% else %}
+        <li><a href="{{url_for('home') }}">Home</a></li>
+          <li><a href="{{url_for('show_search')}}">Search</a></li>
+        {% endif %}
+
+    {%endblock%}
+ {% block body %} 
+
+ <div class="jumbotron">
+
+        <form action="{{ url_for('rating') }}" method="post">
+        <input type="hidden" name="movie_id" value="{{movie.id}}">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"> 
+
+        <h3>Movie: {{movie.name}}<br></h3>
+        <h3>Average rating: {{ avg | round | int }} </h3><br>
+
+        {% if user_rating %}
+        
+        Your rating {{user_rating.rating}}
+        <h3>Rate this movie</h3>   
+        <input type="number" min="1" max="5" name="rating"/>
+        <input type="submit"/>
+        </form>
+      
+
+        {% elif user_rating==False %}
+        <h3>You are not logged in. <a href="{{ url_for('signup') }}">Create an account</a> to submit a rating.</h3>
+
+
+
+        {% else %}
+        You don't have a rating for that movie.
+        Based on your history, we think you will rate this movie a:
+        
+        <h3>Rate this movie</h3><br>
+        <input type="number" min="1" max="5" name="rating"/>
+        <input type="submit"/>
+        </form>
+
+
+        {% endif %}
+
+   
+ 
+
+</div>
+{% endblock %}
+
+
+

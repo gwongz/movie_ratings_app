@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+      {% block nav %}
+
+          <li class="active"><a href="{{url_for('home') }}">Home</a></li>
+          <li><a href="{{url_for('show_search')}}">Search</a></li>
+
+
+    {% endblock %}
+
+
+
+{% block body %}
+  <div class="jumbotron">
+        <h1>Sign In</h1>
+        <p class="lead">
+        What have you watched lately?
+        <form action = "{{url_for('login')}}" method="POST">
+        
+  
+
+            Username: <input type="text" name="username" /><br>
+            Password: <input type="password" name="password"/><br><br>
+            <input type="submit" class="btn btn-lg btn-success" value="Login"/>
+            </form>
+            <br>
+        
+
+            <form action = "{{ url_for('create_user') }}">
+            <input type="submit" class="btn btn-lg btn-success" value="Sign In"/>
+            </form>
+ 
+
+            
+            <p></p>
+      
+</div>
+
+{% endblock %}
