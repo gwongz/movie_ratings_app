@@ -1,24 +1,51 @@
 {% extends "layout.html" %}
  {% block body %}
-        <p> Sign Up </p>
+
+        <div class="jumbotron">
+        <h1> Create an account </h1>
+
+      
+    
         <form action = "{{url_for ('create_user')}}" method="POST">
             <!-- <label for="email">Email</label> -->
-            Email: <input type="text" name="email"/>
-            <br>
+            
+            <div class="input-group">
 
+            <input type="text" class="form-control" placeholder="Email"name="email"/>
+
+            </div>
+            <div class="input-group">
             <!-- <label for="password">Create Password</label> -->
-            Password: <input type="password" name="password"/>
-            <br>
+            <input type="password" class="form-control" placeholder="Password" name="password"/>
+
+            <div class="input-group">
+      <span class="input-group-addon">
+        <input type="radio">
+      </span>
+      <input type="text" class="form-control">
+    </div><!-- /input-group -->
+            
+            <div class="input-group">
             <!-- <label for="gender">Gender (M/F)?</label> -->
-            Gender: <input type="radio" name="gender" value="M"/>Male
-                    <input type="radio" name="gender" value="F"/>Female
-            <br>
-            Age: <input type="text" name="age"/>
-            <br>
-            Zipcode: <input type="text" name="zipcode"/>
-            <br>
+            Gender: <input type="radio" class="form-control" name="gender" value="M"/>Male
+                    <input type="radio" class="form-control" name="gender" value="F"/>Female
+            </div>
+
+            <div class="input-group">
+            <input type="text" class="form-control" placeholder="Age"name="age"/>
+            </div>
+  
+            <div class="input-group">
+            <input type="text" class="form-control" placeholder="Zipcode" name="zipcode"/>
+            </div>
+            <div class="input-group">
             <!-- <label for="occupation">What's your occupation?</label> -->
-            Occupation<input type="text" name="occupation"/>
-            <br>
-            <input type="submit" value="Sign Up"/> 
+            <input type="text" class="form-control" placeholder="Occupation" name="occupation"/>
+            </div>
+
+            <input type="submit" class="btn btn-lg btn-success" value="Sign Up"/>
+       
+        </div>
+      
+        </div>
 {% endblock %}
