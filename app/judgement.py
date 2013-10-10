@@ -1,6 +1,10 @@
 from flask import Flask, render_template, redirect, request, session, g, url_for, flash, jsonify 
 from model import session as db_session, User, Rating, Movie 
-from app import app 
+
+
+app = Flask(__name__)
+app.secret_key = 'you-will-never-guess'
+
 
 @app.route('/')
 @app.route('/index')
@@ -16,18 +20,17 @@ def before_request():
     else:
         g.user = None
 
-def csrf_protect():
-    if request.method == 'POST':
-        token = session.pop('_csrf_token', None)
-        if not token or token != request.form.get('_csrf_token'):
-            abort(403)
+# def csrf_protect():
+#     if request.method == 'POST':
+#         token = session.pop('_csrf_token', None)
+#         if not token or token != request.form.get('_csrf_token'):
+#             abort(403)
 
-def generate_csrf_token():
-    if '_csrf_token' not in session:
-        session['_csrf_token'] = 'fdsldkfjde[qwbjwtv'
-    return session['_csrf_token']
-
-app.jinja_env.globals['csrf_token'] = generate_csrf_token
+# def generate_csrf_token():
+#     if '_csrf_token' not in session:
+#         session['_csrf_token'] = 'fdsldkfjde[qwbjwtv'
+#     return session['_csrf_token']
+# app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
 @app.route("/login", methods=['POST', 'GET'])
 def login():
@@ -156,3 +159,6 @@ def user():
 def all_movies():
     movie_list = db_session.query(Movie).limit(30).all()
     return render_template('all_movies.html', movie_list=movie_list)
+
+if __name__ == "__main__":
+    app.run(debug = True)
