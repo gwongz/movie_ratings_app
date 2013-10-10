@@ -14,7 +14,7 @@ Step 3: Install dependencies from the `requirements` file
 `$ pip install -r requirements.txt`
 
 Step 4: Run app in development web server and navigate to your localhost in your browser   
-`$ python run.py`        
+`$ python judgement.py`        
 `http://127.0.0.1:5000/`
 
 
