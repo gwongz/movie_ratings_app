@@ -13,10 +13,10 @@ Step 2: Create and activate a [virtualenv](http://www.virtualenv.org/en/latest/)
 Step 3: Install dependencies from the `requirements` file        
 `$ pip install -r requirements.txt`
 
-Step 4: Run app in development web server and navigate to your localhost in your browser   
+Step 4: From the `/app` directory, run the `judgement` file in the development web server and navigate to localhost in your browser   
 `$ python judgement.py`        
 `http://127.0.0.1:5000/`
 
 
-Step 5: To run tests, navigate to the `/app` directory and run the `test` file from the command line     
+Step 5: To run tests, run the `test` file from the command line     
 `$ python test.py`
