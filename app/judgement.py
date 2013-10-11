@@ -13,13 +13,6 @@ def home():
 @app.before_request
 def before_request():
     g.user_id = session.get('user_id')
-    # g.user_id = session.get('user_id')
-    # user_id = session.get("user_id")
-    # if user_id:
-    #     user = db_session.query(User).get(user_id)
-    #     g.user = user
-    # else:
-    #     g.user = None
 
 @app.teardown_request
 def shutdown_session(exception = None):
@@ -28,18 +21,6 @@ def shutdown_session(exception = None):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
-
-# def csrf_protect():
-#     if request.method == 'POST':
-#         token = session.pop('_csrf_token', None)
-#         if not token or token != request.form.get('_csrf_token'):
-#             abort(403)
-
-# def generate_csrf_token():
-#     if '_csrf_token' not in session:
-#         session['_csrf_token'] = 'fdsldkfjde[qwbjwtv'
-#     return session['_csrf_token']
-# app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
 @app.route("/login", methods=['POST', 'GET'])
 def login():
@@ -95,12 +76,6 @@ def create_user():
         if existing:
             flash("I'm sorry. That email is already taken.")
             return redirect(url_for('signup')) 
-
-        # elif not email or password or age or occupation or zipcode:
-       
-            # flash("Oops, looks like you didn't fill out the form completely.")
-            # return render_template('signup.html')
-
         
         user = User(email=email, password=password, age=age, gender=gender, occupation=occupation, zipcode=zipcode)
         flash('Your account has been created.')
@@ -208,10 +183,6 @@ def rating():
     rating.rating=value   
     db_session.commit()
     return redirect (url_for('display_movie', id=movie_id))
-
-    # except(KeyError):
-    #     return redirect (url_for('search'))
-
 
 @app.route('/user') # a user's movies
 def user():
