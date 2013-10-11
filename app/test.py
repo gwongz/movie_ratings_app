@@ -34,11 +34,6 @@ class JudgementTestCase(unittest.TestCase):
 	def logout(self):
 		return self.app.get('/logout', follow_redirects=True)
 
-
-
-			
-
-
 	def create_unique_user(self, email, password, age, gender, occupation, zipcode):
 		return self.app.post('/create_user', data=dict(
 			email=email,
@@ -117,9 +112,6 @@ class JudgementTestCase(unittest.TestCase):
 			assert "Your rating has been updated" in response.data
 			updated_rating = model.Rating.query.filter(model.Rating.movie_id==1).filter(model.Rating.user_id==1).one()
 			self.assertTrue(existing_rating != updated_rating)
-		
-
-
 
 if __name__=="__main__":
 	unittest.main()
