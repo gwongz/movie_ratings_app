@@ -3,13 +3,12 @@ try:
 except ImportError:
     raise SystemExit('Could not find judgement.py. Does it exist?')
 
-
 import unittest
 import os
 import tempfile
 import flask
 from flask import request, jsonify, Flask
-from mock import Mock 
+import mock
 import model
 import json
 from mock import patch
@@ -36,6 +35,10 @@ class JudgementTestCase(unittest.TestCase):
 		return self.app.get('/logout', follow_redirects=True)
 
 
+
+			
+
+
 	def create_unique_user(self, email, password, age, gender, occupation, zipcode):
 		return self.app.post('/create_user', data=dict(
 			email=email,
@@ -52,8 +55,7 @@ class JudgementTestCase(unittest.TestCase):
 		response = self.logout()
 		assert "You have been logged out" in response.data 
 		response = self.login('grace', 'hackbright')
-		assert 'Invalid credentials' in response.data 
-
+		assert 'Invalid credentials' in response.data
 
 	def test_urls(self):
 		response = self.app.get('/', follow_redirects=True)
@@ -79,17 +81,40 @@ class JudgementTestCase(unittest.TestCase):
 
 		response = self.app.get('/nonexistent', follow_redirects=True)
 		assert "Page Not Found" in response.data
-		self.assertEqual(response.status_code, 404)	
-
+		self.assertEqual(response.status_code, 404)
+		
+		
+	def test_movie(self):
+		with self.app as c:
+			with c.session_transaction() as sess:
+				sess['user_id'] = 1
+			response = self.app.get('/movie/1', follow_redirects=True)
+			self.assertEqual(response.status_code, 200)
+			assert "Toy Story" in response.data
+			assert "Your rating" in response.data	
 
 	def test_create_unique_user(self):
-		existing_user = model.User.query.filter(model.User.email=='abc123').one()
+		existing_user = model.User.query.filter(model.User.email=='admin').one()
 		existing_user_password = existing_user.password 
-		response = self.create_unique_user('abc123', 'hello', 30, "female", "student", 94109)
+		response = self.create_unique_user('admin', 'hello', 30, "female", "student", 94109)
 		self.assertFalse(existing_user_password=='hello')
 		assert "That email is already taken." in response.data
-		print response.data
 
+	def change_rating(self, movie_id, value):
+		return self.app.post('/rating', data=dict(
+						movie_id=movie_id, value=value), follow_redirects=True)
+
+	def test_change_rating_in_db(self):
+		user = model.User.query.filter(model.User.email=='admin').one()
+		movie = model.Movie.query.get(1)
+		rating_obj = model.Rating.query.filter(model.Rating.movie_id==1).filter(model.Rating.user_id==1).one()				
+		rating = rating_obj.rating
+		new_rating = 5
+		rating_obj.rating = new_rating # updates existing record
+		updated_obj = model.Rating.query.filter(model.Rating.movie_id==1).filter(model.Rating.user_id==1).one()
+		updated_rating = updated_obj.rating 		
+		self.assertEqual(updated_rating, new_rating)
+		self.assertFalse(updated_rating==rating)
 
 if __name__=="__main__":
 	unittest.main()
