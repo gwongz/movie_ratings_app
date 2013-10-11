@@ -6,12 +6,9 @@ except ImportError:
 import unittest
 import os
 import tempfile
-import flask
 from flask import request, jsonify, Flask
-import mock
 import model
-import json
-from mock import patch
+
 
 class JudgementTestCase(unittest.TestCase):
 	def setUp(self):
