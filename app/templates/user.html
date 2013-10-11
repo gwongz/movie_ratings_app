@@ -6,29 +6,33 @@
           <li><a href="{{url_for('show_search')}}">Search</a></li>
           <li><a href="{{url_for('logout')}}">Logout</a></li>
 
-
-          {%endblock%}
+{% endblock %}
 
  {% block body %}
  
 
 
-
-    <h2>
-        Hello, {{user.email}}! You have rated {{user.ratings|length }} movies:</a><br>
-    </h2>
+  <div class="jumbotron">
+      {% if ratings %}
+        <h2>
+        Hello! You have rated {{ratings|length }} movies:</a><br>
+        </h2>
        
-        {% for rating in user.ratings %}
+        {% for rating in ratings %}
         <ul>
         <li> 
-        <a href="/movie?id={{rating.movie_id}}"> {{rating.movie.name}} </a> &mdash; {{rating.rating}}</li>
+        <a href="{{ url_for('display_movie', id=rating.movie_id) }}"> {{rating.movie.name}} </a> &mdash; {{rating.rating}}</li>
        
         </ul>
+        {% endfor %}
+
     {% else %}
     <h3>You haven't submitted any ratings yet. Have you seen any of these 
     <a href="{{url_for('all_movies')}}">movies?</a></h3>
+    {% endif %}
+      
+</div>
 
-      {% endfor %}
   
  
 

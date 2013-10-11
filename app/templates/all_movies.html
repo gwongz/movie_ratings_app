@@ -1,10 +1,15 @@
 {% extends "layout.html" %}
  {% block body %}
+
+ 		<div class="jumbotron">
         <h1>All movies in the Ratings Database</h1>
 
         {% for movie in movie_list %}
-           <a href="/movie?id={{movie.id}}">{{movie.name}}</a> <br>
+        		<a href="{{url_for('display_movie', id=movie.id) }}">{{movie.name}}</a><br>
+           <!-- 
+           <a href="/movie?id={{movie.id}}">{{movie.name}}</a> <br> -->
         {% endfor %}
+        </div>
 
 
 {% endblock %}
