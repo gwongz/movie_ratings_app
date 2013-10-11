@@ -178,13 +178,14 @@ def display_movie(id):
 # except(TypeError):
     #     return redirect(url_for('search'))
 
-@app.route("/rating", methods=['GET','POST'])
+@app.route("/rating", methods=['POST', 'GET'])
 def rating():
     # try:
     user_id = session['user_id']
-    value = request.form['rating']
-    movie_id = request.form['movie_id']
-    
+
+    value = request.form.get("rating")
+    movie_id = request.form.get('movie_id')
+
     rating = db_session.query(Rating).filter(Rating.user_id==user_id).filter(Rating.movie_id==movie_id).first()
 
     if not rating:
