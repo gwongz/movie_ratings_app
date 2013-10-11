@@ -1,7 +1,6 @@
 from flask import Flask, render_template, redirect, request, session, g, url_for, flash, jsonify 
 from model import session as db_session, User, Rating, Movie 
 
-
 app = Flask(__name__)
 app.secret_key = 'you-will-never-guess'
 
@@ -13,12 +12,22 @@ def home():
 
 @app.before_request
 def before_request():
-    user_id = session.get("user_id")
-    if user_id:
-        user = db_session.query(User).get(user_id)
-        g.user = user
-    else:
-        g.user = None
+    g.user_id = session.get('user_id')
+    # g.user_id = session.get('user_id')
+    # user_id = session.get("user_id")
+    # if user_id:
+    #     user = db_session.query(User).get(user_id)
+    #     g.user = user
+    # else:
+    #     g.user = None
+
+@app.teardown_request
+def shutdown_session(exception = None):
+    db_session.remove()
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 # def csrf_protect():
 #     if request.method == 'POST':
@@ -45,7 +54,7 @@ def login():
     else:
         session['user_id'] = user.id # scoped session
         flash('You were successfully logged in')
-        return render_template('search.html', user=user) # change to search.html
+        return render_template('search.html', user=user) 
 
 @app.route('/search', methods=['POST'])
 def search():
@@ -59,7 +68,8 @@ def show_search():
 
 @app.route("/logout")
 def logout():
-    if not g.user:
+    if not g.user_id:
+    # if not g.user:
         return redirect(url_for('home'))  
     else:
         del session["user_id"] 
@@ -73,51 +83,100 @@ def signup():
 @app.route("/create_user", methods=["POST"])
 def create_user():
     
-    email = request.form["email"]
+    email= request.form["email"]
     password = request.form["password"]
     age = request.form["age"]
     gender = request.form["gender"]
     occupation = request.form["occupation"]
     zipcode = request.form["zipcode"]
+
     existing = db_session.query(User).filter_by(email=email).first()
     if existing:
         flash("I'm sorry. That email is already taken.")
-        return redirect(url_for('home'))
+        return redirect(url_for('signup')) 
 
+    # elif not email or password or age or occupation or zipcode:
+   
+        # flash("Oops, looks like you didn't fill out the form completely.")
+        # return render_template('signup.html')
+
+    
     user = User(email=email, password=password, age=age, gender=gender, occupation=occupation, zipcode=zipcode)
-
+    flash('Your account has been created.')
     db_session.add(user)
     db_session.commit()
-
     session['user_id'] = user.id
-    return render_template("user.html", user=user)
+    return render_template("user.html", ratings=None)
 
-@app.route("/movie", methods=['GET']) # display a movie's rating based on id
-def display_movie():
-    try:
-        movie_id = int(request.args.get("id"))
-        movie = db_session.query(Movie).get(movie_id)
-        ratings = movie.ratings
-        user_rating = None
-        total = []
-        
-        for rating in ratings:
-            if rating.rating == None:
-                continue       
-            total.append(rating.rating)
-        avg_rating = float(sum(total))/len(total)
+@app.route('/movie/<int:id>', methods=['GET'])
+def display_movie(id):
 
-        if not g.user: # if not logged in 
-            return render_template('movie.html', movie=movie, avg=avg_rating, user_rating=False)
+    movie = db_session.query(Movie).get(id)
+    ratings = movie.ratings 
+    total = []
+    user_rating = None
+    for rating in ratings:     
+        if rating.user_id == session['user_id']:
+            user_rating = rating
+        total.append(rating.rating)
+    avg_rating = float(sum(total))/len(total)
 
-        else:
-            for rating in ratings:                
-                if rating.user_id == session['user_id']:
-                    user_rating = rating 
-            return render_template("movie.html", movie=movie, avg=avg_rating, user_rating=user_rating)
+    # predict if no user rating
+    prediction = None
+    if not user_rating:
+        user = db_session.query(User).get(g.user_id)
+        prediction = user.predict_rating(movie)
+        print "Prediction: ", prediction 
+
+    return render_template('movie.html', movie=movie,
+                            avg=avg_rating,
+                            user_rating=user_rating,
+                            prediction=prediction)
+
+# @app.route("/movie", methods=['GET']) # display a movie's rating based on id
+# def display_movie():
+#     # try:
+#     movie_id = int(request.args.get("id"))
+#     movie = db_session.query(Movie).get(movie_id)
+#     ratings = movie.ratings
+#     user_rating = None
+#     total = []
     
-    except(TypeError):
-        return redirect(url_for('search'))
+#     for r in ratings:
+#         if r.rating == None:
+#             continue   
+#         if r.user_id == session['user_id']:
+#             user_rating = r    
+#         total.append(r.rating)
+    
+#     avg_rating = float(sum(total))/len(total)
+#     print "This is avg rating", avg_rating
+
+#     # check for prediction
+#     user = db_session.query(User).get(session['user_id'])
+#     print "User:", user 
+#     prediction = None
+#     print "prediction", prediction
+#     if not user_rating:
+#         prediction = user.predict_rating(movie)
+
+#     # if not g.user: # if not logged in 
+#         # return render_template('movie.html', movie=movie, 
+#                                             # avg=avg_rating, 
+#                                             # user_rating=False,
+#                                             # prediction=False)
+
+#     # else:
+#     # for r in ratings:                
+#     #     if r.user_id == session['user_id']:
+#     #         user_rating = rating 
+#     return render_template("movie.html", movie=movie, 
+#                             avg=avg_rating, 
+#                             user_rating=user_rating,
+#                             prediction=prediction)
+
+# except(TypeError):
+    #     return redirect(url_for('search'))
 
 @app.route("/rating", methods=['GET','POST'])
 def rating():
@@ -150,10 +209,12 @@ def rating():
 
 @app.route('/user') # a user's movies
 def user():
-    if g.user == None:
+    if g.user_id == None:
         return render_template('login.html')
     else: 
-        return render_template('user.html', user=g.user)
+        ratings = db_session.query(Rating).filter(Rating.user_id==g.user_id).all()
+        return render_template('user.html', ratings=ratings)
+
 
 @app.route('/all_movies')
 def all_movies():
