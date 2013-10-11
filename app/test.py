@@ -102,19 +102,24 @@ class JudgementTestCase(unittest.TestCase):
 
 	def change_rating(self, movie_id, value):
 		return self.app.post('/rating', data=dict(
-						movie_id=movie_id, value=value), follow_redirects=True)
+						movie_id=movie_id, rating=rating), follow_redirects=True)
 
 	def test_change_rating_in_db(self):
-		user = model.User.query.filter(model.User.email=='admin').one()
-		movie = model.Movie.query.get(1)
-		rating_obj = model.Rating.query.filter(model.Rating.movie_id==1).filter(model.Rating.user_id==1).one()				
-		rating = rating_obj.rating
-		new_rating = 5
-		rating_obj.rating = new_rating # updates existing record
-		updated_obj = model.Rating.query.filter(model.Rating.movie_id==1).filter(model.Rating.user_id==1).one()
-		updated_rating = updated_obj.rating 		
-		self.assertEqual(updated_rating, new_rating)
-		self.assertFalse(updated_rating==rating)
+		# using user_id = 1 as my test user
+		with self.app as c:
+			with c.session_transaction() as sess:
+				sess['user_id'] = 1
+			existing_rating = model.Rating.query.filter(model.Rating.movie_id==1).filter(model.Rating.user_id==1).one()	
+			#set existing rating to 1
+			existing_rating.rating=1
+			# change the rating to 5
+			response = self.app.post('/rating', data=dict(movie_id=1, rating=5), follow_redirects=True)
+			assert "Your rating has been updated" in response.data
+			updated_rating = model.Rating.query.filter(model.Rating.movie_id==1).filter(model.Rating.user_id==1).one()
+			self.assertTrue(existing_rating != updated_rating)
+		
+
+
 
 if __name__=="__main__":
 	unittest.main()

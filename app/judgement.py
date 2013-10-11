@@ -183,24 +183,25 @@ def rating():
     # try:
     user_id = session['user_id']
 
-    value = request.form.get("rating")
-    movie_id = request.form.get('movie_id')
+    value = int(request.form["rating"])
+    movie_id = request.form['movie_id']
 
     rating = db_session.query(Rating).filter(Rating.user_id==user_id).filter(Rating.movie_id==movie_id).first()
 
     if not rating:
         flash("Your rating has been added")
-        rating = Rating()
-        rating.user_id = user_id
-        rating.movie_id = movie_id
-        rating.rating = int(value)
+        rating = Rating(user_id=user_id, movie_id=movie_id)
+        # rating = Rating()
+        # rating.user_id = user_id
+        # rating.movie_id = movie_id
+        # rating.rating = int(value)
         db_session.add(rating)
-        db_session.commit()
+        # db_session.commit()
 
     else:
         flash("Your rating has been updated")    
-        rating.rating = int(value)
-       
+        # rating.rating = int(value)
+    rating.rating=value   
     db_session.commit()
     return redirect (url_for('display_movie', id=movie_id))
 
