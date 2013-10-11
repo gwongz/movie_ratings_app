@@ -77,8 +77,7 @@ class JudgementTestCase(unittest.TestCase):
 		response = self.app.get('/nonexistent', follow_redirects=True)
 		assert "Page Not Found" in response.data
 		self.assertEqual(response.status_code, 404)
-		
-		
+				
 	def test_movie(self):
 		with self.app as c:
 			with c.session_transaction() as sess:
@@ -88,19 +87,21 @@ class JudgementTestCase(unittest.TestCase):
 			assert "Toy Story" in response.data
 			assert "Your rating" in response.data	
 
+	# checking validity of sign up form
 	def test_create_unique_user(self):
 		existing_user = model.User.query.filter(model.User.email=='admin').one()
 		existing_user_password = existing_user.password 
 		response = self.create_unique_user('admin', 'hello', 30, "female", "student", 94109)
 		self.assertFalse(existing_user_password=='hello')
 		assert "That email is already taken." in response.data
+		# need to add condition for empty sign up form and incomplete form
 
 	def change_rating(self, movie_id, value):
 		return self.app.post('/rating', data=dict(
 						movie_id=movie_id, rating=rating), follow_redirects=True)
 
 	def test_change_rating_in_db(self):
-		# using user_id = 1 as my test user
+		# fake session with user 1 
 		with self.app as c:
 			with c.session_transaction() as sess:
 				sess['user_id'] = 1
