@@ -83,30 +83,34 @@ def signup():
 @app.route("/create_user", methods=["POST"])
 def create_user():
     
-    email= request.form["email"]
-    password = request.form["password"]
-    age = request.form["age"]
-    gender = request.form["gender"]
-    occupation = request.form["occupation"]
-    zipcode = request.form["zipcode"]
+    try:
+        email= request.form["email"]
+        password = request.form["password"]
+        age = request.form["age"]
+        gender = request.form["gender"]
+        occupation = request.form["occupation"]
+        zipcode = request.form["zipcode"]
 
-    existing = db_session.query(User).filter_by(email=email).first()
-    if existing:
-        flash("I'm sorry. That email is already taken.")
-        return redirect(url_for('signup')) 
+        existing = db_session.query(User).filter_by(email=email).first()
+        if existing:
+            flash("I'm sorry. That email is already taken.")
+            return redirect(url_for('signup')) 
 
-    # elif not email or password or age or occupation or zipcode:
-   
-        # flash("Oops, looks like you didn't fill out the form completely.")
-        # return render_template('signup.html')
+        # elif not email or password or age or occupation or zipcode:
+       
+            # flash("Oops, looks like you didn't fill out the form completely.")
+            # return render_template('signup.html')
 
-    
-    user = User(email=email, password=password, age=age, gender=gender, occupation=occupation, zipcode=zipcode)
-    flash('Your account has been created.')
-    db_session.add(user)
-    db_session.commit()
-    session['user_id'] = user.id
-    return render_template("user.html", ratings=None)
+        
+        user = User(email=email, password=password, age=age, gender=gender, occupation=occupation, zipcode=zipcode)
+        flash('Your account has been created.')
+        db_session.add(user)
+        db_session.commit()
+        session['user_id'] = user.id
+        return render_template("user.html", ratings=None)
+    except:
+        flash("It looks like there was an error with the form. Please fill out all fields.")
+        return redirect(url_for('signup'))
 
 @app.route('/movie/<int:id>', methods=['GET'])
 def display_movie(id):
