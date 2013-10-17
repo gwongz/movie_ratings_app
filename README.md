@@ -23,4 +23,4 @@ Step 5: To run tests on the app, run the `test` file from the command line
 
 ![Alt text](/screenshots/login.png "Screenshot of login page")
 ![Alt text](/screenshots/prediction.png "Screenshot of predicted rating")
-![Alt text](/screenshots/user_rating.png "Screenshot of user's ratings")
+![Alt text](/screenshots/user_ratings.png "Screenshot of user's ratings")
