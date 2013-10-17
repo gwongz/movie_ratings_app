@@ -1,7 +1,7 @@
 Movie Ratings Application
 =========================
 
-This is a movie rating system app based on machine learning principles. It uses the Pearson Correlation for predicting ratings. The database is seeded with the [MovieLens](http://grouplens.org/datasets/movielens/) 100k dataset. It consists of 100,000 ratings of 1,700 movies from 1,000 users. 
+This is a movie rating system based on machine learning principles. Using the Pearson Correlation, it determines how similar users in the database are to each other and predicts how a user will rate a movie. The database is seeded with the [MovieLens](http://grouplens.org/datasets/movielens/) 100k dataset. It consists of 100,000 ratings of 1,700 movies from 1,000 users. 
 
 Installation
 ------------
@@ -13,10 +13,10 @@ Step 2: Create and activate a [virtualenv](http://www.virtualenv.org/en/latest/)
 Step 3: Install dependencies from the `requirements` file        
 `$ pip install -r requirements.txt`
 
-Step 4: From the `/app` directory, run the `judgement` file in the development web server and navigate to localhost in your browser   
-`$ python judgement.py`        
+Step 4: Run the `main` file in the development web server and navigate to localhost in your browser   
+`$ python main.py`        
 `http://127.0.0.1:5000/`
 
 
-Step 5: To run tests, run the `test` file from the command line     
+Step 5: To run tests on the app, run the `test` file from the command line     
 `$ python test.py`
