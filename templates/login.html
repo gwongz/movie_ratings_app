@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block nav %}
+
+      {% if g.user_id %}
+      <li><a href="{{url_for('my_ratings')}}">My Ratings</a></li>
+      <li><a href="{{url_for('show_search')}}">Search</a></li>
+      <li><a href="{{url_for('logout')}}">Logout</a></li>
+
+      {% else %}
+      <li class="active"><a href="{{url_for('home') }}">Home</a></li>
+      <li><a href="{{url_for('show_search')}}">Search</a></li>
+
+      {% endif %}
+{% endblock %}
+
+{% block body %}
+  <div class="jumbotron">
+    <h1>What have you watched lately?</h1>
+      <p class="lead">
+        <!-- <form role="form"> -->
+          <form action = "{{url_for('login')}}" method="POST">
+            <div class="form-group">
+              <input type="text" name="username" placeholder="Username" class="form-control input-lg"/>
+            </div>
+            <div class="form-group">
+              <input type="password" name="password" placeholder="Password" class="form-control input-lg"/>
+            </div>
+            <div class="form-group">
+              <input type="submit" class="btn btn-lg btn-success" value="Login"/>
+              <!-- <small>Don't have an account? <a href="{{url_for('signup')}}">Sign up</a></small> -->
+            </div>
+          </form>
+        
+        
+
+            <form action = "{{ url_for('signup') }}" >
+            <input type="submit" class="btn btn-success" value="Sign Up"/>
+            </form>
+ 
+
+            
+            <p></p>
+      
+</div>
+
+{% endblock %}

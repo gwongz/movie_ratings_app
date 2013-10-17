@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+  {% block nav %}
+    {% if g.user_id %}
+      <li><a href="{{url_for('my_ratings')}}">My Ratings</a></li>
+      <li><a href="{{url_for('show_search')}}">Search</a></li>
+      <li><a href="{{url_for('logout')}}">Logout</a></li>
+
+    {% else %}
+      <li><a href="{{url_for('home') }}">Login</a></li>
+      <li><a href="{{url_for('show_search')}}">Search</a></li>
+
+    {% endif %}
+
+  {% endblock %}
+  
+  {% block body %} 
+
+
+       
+        <div class="form-group">
+          <form action="{{ url_for('rating') }}" method="post">
+            <input type="hidden" name="movie_id" value="{{movie.id}}"> 
+            
+            
+            <strong>{{movie.name}}</strong>
+           
+            
+            <ul class="movie-details">
+              <li>Average rating: {{ avg | round | int }}</li>
+              <!-- <li>Date released: {{movie.released_at}}</li> -->
+              <li>Movie details from <a href="{{movie.imdb_url}}">IMDB</a></li>
+              <p></p>
+            
+
+            {% if user_rating %}        
+              <li>Your rating: {{user_rating.rating}}</li>
+            </ul>
+            
+            
+            {% elif prediction %}
+            <div class="text-left">
+            <p>
+            You don't have a rating for this movie.
+            
+            Based on your history, we think you will rate this movie {{ prediction | round | int }} out of 5.
+            </p>
+            
+            {% endif %}
+             
+           
+            <div class="form-group">
+              <strong>Rate this movie</strong><p></p>
+                
+                <input type="number" min="1" max="5" name="rating" class="input-lg"/>
+                <input type="submit" class="btn btn-success">
+            </div>
+          </form>
+      </div>
+   
+
+{% endblock %}

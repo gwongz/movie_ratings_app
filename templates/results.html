@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+
+	<div class="jumbotron">
+		<strong> Search results</strong><p></p>
+		{% for movie in movies %} 
+			<a href="{{url_for("movie", id=movie.id) }}">{{movie.name}}<br>
+	
+		{% else %}
+		<p>I'm sorry. There were no results found. Try searching for a different movie.</p>
+		<form action="{{url_for('search')}}" method="post">	
+			<div class="form-group">
+      	<input type="text" name="query" placeholder="Movie title" class="input-lg"/><br>
+      </div>
+      <div class="form-group">
+      	<input type="submit" class="btn btn-success" value="Search"/>
+      </div>
+     </form>
+		{% endfor %}
+
+	</div>
+{% endblock %}

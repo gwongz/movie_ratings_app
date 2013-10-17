@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+  {% block nav %}
+
+          <li class="active"><a href="{{ url_for('home') }}">Home</a></li>
+          <li><a href="{{url_for('show_search')}}">Search</a></li>
+          <li><a href="{{url_for('logout')}}">Logout</a></li>
+
+  {% endblock %}
+
+  {% block body %}
+      <div class="jumbotron">  
+      
+      {% if ratings %}
+      <div class="container">
+        <h2>Hello! You have rated {{ratings|length }} movies:</h2>
+      </div>
+       
+
+        {% for rating in ratings %}
+          <div class="container">
+            <ul class="movie-details">
+              <li> 
+              
+                <a href="{{ url_for('movie', id=rating.movie_id) }}"> {{rating.movie.name}}</a>
+                &mdash; {{rating.rating}}
+              </li>
+            </ul>
+          </div>
+        {% endfor %}
+
+        {% else %}
+        <div class="container">
+        You haven't submitted any ratings yet. Have you seen any of these 
+        <a href="{{url_for('all_movies')}}" class="underline">movies?</a>
+        </div>
+        {% endif %}
+
+    </div><!--.end jumbotron-->
+
+
+{% endblock %}

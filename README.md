@@ -1,7 +1,7 @@
 Movie Ratings Application
 =========================
 
-A Python application built using Flask and SQLAlchemy. The database is seeded with the [MovieLens](http://grouplens.org/datasets/movielens/) 100k dataset. It consists of 100,000 ratings of 1,700 movies from 1,000 users. 
+This is a movie rating system app based on machine learning principles. It uses the Pearson Correlation for predicting ratings. The database is seeded with the [MovieLens](http://grouplens.org/datasets/movielens/) 100k dataset. It consists of 100,000 ratings of 1,700 movies from 1,000 users. 
 
 Installation
 ------------
