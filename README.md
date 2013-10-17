@@ -20,3 +20,7 @@ Step 4: Run the `main` file in the development web server and navigate to localh
 
 Step 5: To run tests on the app, run the `test` file from the command line     
 `$ python test.py`
+
+![Alt text](/screenshots/login.png "Screenshot of login page")
+![Alt text](/screenshots/prediction.png "Screenshot of predicted rating")
+![Alt text](/screenshots/user_rating.png "Screenshot of user's ratings")
