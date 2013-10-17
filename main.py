@@ -37,13 +37,10 @@ def login():
     if not user:
         flash('Invalid credentials')
         return render_template('login.html')
-    
     else:
-
         session['user_id'] = user.id # scoped session    
         flash('You were successfully logged in')
         return redirect('user')
-        # return render_template('search.html', user=user) 
 
 @app.route('/search', methods=['POST'])
 def search():
@@ -58,7 +55,6 @@ def show_search():
 @app.route("/logout")
 def logout():
     if not g.user_id:
-    # if not g.user:
         return redirect(url_for('home'))  
     else:
         del session["user_id"] 
@@ -72,11 +68,10 @@ def signup():
 @app.route("/create_user", methods=["POST"])
 def create_user():
     
-    # try:
+    # need to add gender and form validation
     email= request.form["email"]
     password = request.form["password"]
     age = request.form["age"]
-    # gender = request.form["gender"]
     occupation = request.form["occupation"]
     zipcode = request.form["zipcode"]
 
@@ -124,7 +119,6 @@ def movie(id):
         user_rating = None
         for rating in ratings:     
             if rating.user_id == g.user_id:
-            # if rating.user_id == session['user_id']:
                 user_rating = rating
             total.append(rating.rating)
         avg_rating = float(sum(total))/len(total)
@@ -141,17 +135,12 @@ def movie(id):
                                 user_rating=user_rating,
                                 prediction=prediction)
 
-
 @app.route("/rating", methods=['POST', 'GET'])
 def rating():
-
     if not g.user_id:
         flash("You have to be logged in to rate a movie.")
-        id=request.args.get('/movie/=')
-        print "This is the id", id 
         return redirect(redirect_url())
     else:
-
         user_id = session['user_id']
         value = int(request.form["rating"])
         movie_id = request.form['movie_id']
@@ -160,20 +149,13 @@ def rating():
         if not rating:
             flash("Your rating has been added")
             rating = Rating(user_id=user_id, movie_id=movie_id)
-            # rating = Rating()
-            # rating.user_id = user_id
-            # rating.movie_id = movie_id
-            # rating.rating = int(value)
             db_session.add(rating)
-            # db_session.commit()
-
         else:
             flash("Your rating has been updated")    
-            # rating.rating = int(value)
+
         rating.rating=value   
         db_session.commit()
         return redirect (url_for('movie', id=movie_id))
-
 
 @app.route('/all_movies')
 def all_movies():
