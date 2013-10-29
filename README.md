@@ -3,7 +3,6 @@ Movie Ratings Application
 
 This is a movie rating system based on machine learning principles. Using the Pearson Correlation, it determines how similar users in the database are to each other and predicts how a user will rate a movie. The database is seeded with the [MovieLens](http://grouplens.org/datasets/movielens/) 100k dataset. It consists of 100,000 ratings of 1,700 movies from 1,000 users. 
 
-Watch a [screencast](http://youtu.be/zOdL1UFN_CY)
 
 Installation
 ------------
